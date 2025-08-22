@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:12:07 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/22 15:04:39 by lperez-h         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:28:06 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@ public:
     float getExchangeRate(const std::string& date) const;
 	bool isValidDate(const std::string& date) const;
 	bool isValidRate(const std::string& rate) const;
+	void processInputFile(const std::string& inputFileName) const
 
 private:
+	BitcoinExchange(const BitcoinExchange& other);
+	BitcoinExchange& operator=(const BitcoinExchange& other);
     std::map<std::string, float> exchangeRates;
 };
 

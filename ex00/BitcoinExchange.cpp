@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:17:01 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/22 15:40:38 by lperez-h         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:37:06 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,50 @@ void BitcoinExchange::loadData(const std::string& filename){
 			}
 		}
     }
+	file.close();
+}
+
+void BitcoinExchange::processInputFile(const std::string& inputFileName) const {
+	std::ifstream file(inputFileName.c_str());
+	if(!file.is_open()){
+		std::cerr << "Couldn't open file: " << inputFileName << std::endl;
+		return;
+	}
+	std::string line;
+	std::getline(file, line); //skip header line
+	while(std::getline(file, line)){
+		size_t pipePos = line.find('|');
+		if(pipePos == std::string::npos){
+			std::cerr << "Error: bad input => " << line << std::endl;
+			continue;
+		}
+		
+		std::string date = line.substr(0, pipePos);
+		std::string valueStr = line.substr(pipePos + 1);
+
+		//Remove whitespace
+		date.erase(date.find_last_not_of(" \t\r\n") + 1);
+		valueStr.erase(0, valueStr.find_first_not_of(" \t\r\n"));
+		valueStr.erase(valueStr.find_last_not_of(" \t\r\n") + 1);
+		
+		if(!isValidDate(date)){
+			std::cerr << "Error: bad date => " << date << std::endl;
+			continue;
+		}
+		char *endptr;
+		float value = std::strtof(valueStr.c_str(), &endptr);
+		if(*endptr != '\0' || !isValidRate(valueStr)){
+			std::cerr << "Error: bad value => " << valueStr << std::endl;
+			continue;
+		}
+		try {
+			float rate = getExchangeRate(date);
+			float result = rate * value;
+			std::cout << date << " => " << valueStr << " = " << result << std::endl;
+		} catch (const std::exception &e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+	}
 	file.close();
 }
 
