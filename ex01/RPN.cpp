@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 09:45:09 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/24 13:02:14 by luifer           ###   ########.fr       */
+/*   Updated: 2025/08/24 13:16:06 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,9 @@ void RPN::_performOperation(char op) {
 
 //Function to evaluate the RPN expression
 int RPN::evaluate(const std::string& expression) {
+    //clear the stack before each evaluation
+    while(!numStack.empty())
+        numStack.pop();
     if (!_validateExpression(expression)) {
         throw std::runtime_error("Invalid RPN expression");
     }
