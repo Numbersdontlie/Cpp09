@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 21:53:25 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/24 22:42:27 by luifer           ###   ########.fr       */
+/*   Updated: 2025/08/24 22:50:27 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ void PmergeMe::run(int argc, char **argv){
         for(size_t i = 0; i < vectorData.size(); ++i){
             std::cout << vectorData[i] << " ";
             if(i < vectorData.size() - 1)
-                std::cout << ", ";
+                std::cout << " ";
         }
         std::cout << std::endl;
 
@@ -251,21 +251,21 @@ void PmergeMe::run(int argc, char **argv){
         clock_t startVector = clock();
         fordJohnsonVector(vectorCopy);
         clock_t endVector = clock();
-        double timeVector = static_cast<double>(endVector - startVector) / CLOCKS_PER_SEC * 1000000;
+        float timeVector = static_cast<float>(endVector - startVector) / CLOCKS_PER_SEC * 1000000;
 
         //Sort with Deque structure and measure the time elapsed
         std::deque<int> dequeCopy = dequeData;
         clock_t startDeque = clock();
         fordJohnsonDeque(dequeCopy);
         clock_t endDeque = clock();
-        double timeDeque = static_cast<double>(endDeque - startDeque) / CLOCKS_PER_SEC * 1000000;
+        float timeDeque = static_cast<float>(endDeque - startDeque) / CLOCKS_PER_SEC * 1000000;
 
         //Display sorted sequence
         std::cout << "After vector: ";
         for(size_t i = 0; i < vectorCopy.size(); ++i){
             std::cout << vectorCopy[i] << " ";
             if(i < vectorCopy.size() - 1)
-                std::cout << ", ";
+                std::cout << " ";
         }
         std::cout << std::endl;
 
@@ -274,7 +274,7 @@ void PmergeMe::run(int argc, char **argv){
         for(size_t i = 0; i < dequeCopy.size(); ++i){
             std::cout << dequeCopy[i] << " ";
             if(i < dequeCopy.size() - 1)
-                std::cout << ", ";
+                std::cout << " ";
         }
         std::cout << std::endl;
 
