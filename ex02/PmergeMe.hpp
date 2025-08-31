@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 21:45:06 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/24 21:53:20 by luifer           ###   ########.fr       */
+/*   Updated: 2025/08/31 18:12:47 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 #include <vector>
 #include <deque>
 #include <iostream>
-#include  <algorithm>
+#include <algorithm>
 #include <ctime>
+#include <sys/time.h>
+#include <iomanip>
 #include <sstream>
 #include <climits>
 

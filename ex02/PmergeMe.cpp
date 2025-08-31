@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 21:53:25 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/24 22:50:27 by luifer           ###   ########.fr       */
+/*   Updated: 2025/08/31 22:02:24 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,19 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &arr){
         }
     }
 
+    //Use a 'used' flag to avoid reusing the same pair
+    std::vector<std::pair<int, int> > sortedPairs;
+    std::vector<bool> used(pairs.size(), false);
+    for(size_t i = 0; i < largers.size(); ++i){
+        for(size_t j = 0; j < pairs.size(); ++j){
+            if(!used[j] && pairs[j].first == largers[i]){
+                sortedPairs.push_back(pairs[j]);
+                used[j] = true;
+                break;
+            }
+        }
+    }
+
     //Build main chain with larger elements
     std::vector<int> mainChain;
     for(size_t i = 0; i < sortedPairs.size(); ++i)
@@ -214,6 +227,18 @@ void PmergeMe::fordJohnsonDeque(std::deque<int> &arr){
         }
     }
 
+    //avoid reusing same pair index when values duplicate
+    std::deque<bool> used(pairs.size(), false);
+    for(size_t i = 0; i < largers.size(); ++i){
+        for(size_t j = 0; j < pairs.size(); ++j){
+            if(!used[j] && pairs[j].first == largers[i]){
+                sortedPairs.push_back(pairs[j]);
+                used[j] = true;
+                break;
+            }
+        }
+    }
+
     //create main chain 
     std::deque<int> mainChain;
     for(size_t i = 0; i < sortedPairs.size(); ++i)
@@ -248,10 +273,11 @@ void PmergeMe::run(int argc, char **argv){
 
         //Sort with vector structure and measure the time elapsed
         std::vector<int> vectorCopy = vectorData;
-        clock_t startVector = clock();
+        struct timeval tv_start, tv_end;
+        gettimeofday(&tv_start, NULL);
         fordJohnsonVector(vectorCopy);
-        clock_t endVector = clock();
-        float timeVector = static_cast<float>(endVector - startVector) / CLOCKS_PER_SEC * 1000000;
+        gettimeofday(&tv_end, NULL);
+        float timeVector = (tv_end.tv_sec - tv_start.tv_sec) * 1e6 + (tv_end.tv_usec - tv_start.tv_usec);
 
         //Sort with Deque structure and measure the time elapsed
         std::deque<int> dequeCopy = dequeData;
@@ -259,7 +285,7 @@ void PmergeMe::run(int argc, char **argv){
         fordJohnsonDeque(dequeCopy);
         clock_t endDeque = clock();
         float timeDeque = static_cast<float>(endDeque - startDeque) / CLOCKS_PER_SEC * 1000000;
-
+        
         //Display sorted sequence
         std::cout << "After vector: ";
         for(size_t i = 0; i < vectorCopy.size(); ++i){
