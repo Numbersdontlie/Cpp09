@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 21:53:25 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/31 22:02:24 by luifer           ###   ########.fr       */
+/*   Updated: 2025/09/01 07:13:53 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,12 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &arr){
     }
 
     //Use a 'used' flag to avoid reusing the same pair
-    std::vector<std::pair<int, int> > sortedPairs;
+    std::vector<std::pair<int, int> > sortedPairsFlagged;
     std::vector<bool> used(pairs.size(), false);
     for(size_t i = 0; i < largers.size(); ++i){
         for(size_t j = 0; j < pairs.size(); ++j){
             if(!used[j] && pairs[j].first == largers[i]){
-                sortedPairs.push_back(pairs[j]);
+                sortedPairsFlagged.push_back(pairs[j]);
                 used[j] = true;
                 break;
             }
@@ -277,15 +277,15 @@ void PmergeMe::run(int argc, char **argv){
         gettimeofday(&tv_start, NULL);
         fordJohnsonVector(vectorCopy);
         gettimeofday(&tv_end, NULL);
-        float timeVector = (tv_end.tv_sec - tv_start.tv_sec) * 1e6 + (tv_end.tv_usec - tv_start.tv_usec);
+        double timeVector = (tv_end.tv_sec - tv_start.tv_sec) * 1e6 + (tv_end.tv_usec - tv_start.tv_usec);
 
         //Sort with Deque structure and measure the time elapsed
         std::deque<int> dequeCopy = dequeData;
-        clock_t startDeque = clock();
+        gettimeofday(&tv_start, NULL);
         fordJohnsonDeque(dequeCopy);
-        clock_t endDeque = clock();
-        float timeDeque = static_cast<float>(endDeque - startDeque) / CLOCKS_PER_SEC * 1000000;
-        
+        gettimeofday(&tv_end, NULL);
+        double timeDeque = (tv_end.tv_sec - tv_start.tv_sec) * 1e6 + (tv_end.tv_usec - tv_start.tv_usec);
+
         //Display sorted sequence
         std::cout << "After vector: ";
         for(size_t i = 0; i < vectorCopy.size(); ++i){
@@ -306,6 +306,7 @@ void PmergeMe::run(int argc, char **argv){
 
         
         //Display time taken
+        std::cout << std::fixed << std::setprecision(6);
         std::cout << "Time to process a range of " << vectorData.size() << " elements with std::vector : " << timeVector << " us" << std::endl;
         std::cout << "Time to process a range of " << dequeData.size() << " elements with std::deque : " << timeDeque << " us" << std::endl;
     } catch (const std::exception &e) {
