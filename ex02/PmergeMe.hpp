@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 21:45:06 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/31 18:12:47 by luifer           ###   ########.fr       */
+/*   Updated: 2025/10/06 01:28:02 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,15 @@ class PmergeMe {
         void fordJohnsonVector(std::vector<int> &arr);
         void insertionSortVector(std::vector<int> &arr, int left, int right);
         int binarySearchVector(const std::vector<int> &arr, int target, int left, int right);
-        
+        static void FordJohnsonSort(std::vector<int> &arr);
+
         //deque implementation
         std::deque<int> dequeData;
         void fordJohnsonDeque(std::deque<int> &arr);
         void insertionSortDeque(std::deque<int> &arr, int left, int right);
         int binarySearchDeque(const std::deque<int> &arr, int target, int left, int right);
+        static void FordJohnsonSortDeque(std::deque<int> &arr);
+        int binarySearchDequeV2(const std::deque<int> &arr, int target, int left, int right);
 
         //Utility functions
         bool isValidNumber(const std::string &str);

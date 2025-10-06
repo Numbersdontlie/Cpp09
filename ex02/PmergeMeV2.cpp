@@ -6,12 +6,13 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 22:18:17 by luifer            #+#    #+#             */
-/*   Updated: 2025/10/06 00:48:29 by luifer           ###   ########.fr       */
+/*   Updated: 2025/10/06 01:02:14 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
+// ------------------- VECTOR VERSION OF FORD-JOHNSON SORT -------------------
 //Generate Jacobsthal numbers up to a certain limit
 std::vector<int> generateJacobsthalNumbers(int limit){
     std::vector<int> J;
@@ -65,6 +66,7 @@ int binarySearchVectorV2(const std::vector<int> &arr, int target, int left, int 
     return left;
 }
 
+//Ford-Johnson sort implementation for vector
 void FordJohnsonSort(std::vector<int> &arr){
     int n = arr.size();
     if (n <= 1)
@@ -86,6 +88,7 @@ void FordJohnsonSort(std::vector<int> &arr){
         largers.push_back(pairs[i].first);
     }
     FordJohnsonSort(largers);
+    
     //Reconstruct pairs according to sorted larger elements
     std::vector<std::pair<int, int> > sortedPairs;
     std::vector<bool> used(pairs.size(), false);
@@ -98,11 +101,13 @@ void FordJohnsonSort(std::vector<int> &arr){
             }
         }
     }
+
     //Build main chain with larger elements
     std::vector<int> mainChain;
     for(size_t i = 0; i < sortedPairs.size(); ++i)
         mainChain.push_back(sortedPairs[i].first);
-    //Insert smaller elements using Jacobsthal order
+    
+        //Insert smaller elements using Jacobsthal order
     size_t m = sortedPairs.size();
     std::vector<size_t> insertionOrder = buildJacobsthalInsertionOrder(m);
     for(size_t idx = 0; idx < insertionOrder.size(); ++idx){
@@ -111,9 +116,75 @@ void FordJohnsonSort(std::vector<int> &arr){
         int pos = binarySearchVectorV2(mainChain, smallValue, 0, static_cast<int>(mainChain.size()) - 1);
         mainChain.insert(mainChain.begin() + pos, smallValue);
     }
+    
     // Insert odd element if exists
     if (hasOdd){
         int pos = binarySearchVectorV2(mainChain, oddElement, 0, static_cast<int>(mainChain.size()) - 1);
+        mainChain.insert(mainChain.begin() + pos, oddElement);
+    }
+    arr = mainChain;
+}
+
+// ------------------- DEQUE VERSION OF FORD-JOHNSON SORT -------------------
+int binarySearchDequeV2(const std::deque<int> &arr, int target, int left, int right){
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] < target)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return left;
+}
+
+void FordJohnsonSortDeque(std::deque<int> &arr){
+    int n = arr.size();
+    if(n <= 1) return;
+    //Pairing phase
+    std::deque<std::pair<int, int> > pairs;
+    bool hasOdd = (n % 2 == 1);
+    int oddElement = hasOdd ? arr[n - 1] : 0;
+    for(int i = 0; i < n - (hasOdd ? 1 : 0); i += 2){
+        if(arr[i] > arr[i + 1]){
+            pairs.push_back(std::make_pair(arr[i], arr[i + 1]));
+        } else {
+            pairs.push_back(std::make_pair(arr[i + 1], arr[i]));
+        }
+    }
+    //Recursive sort of larger elements
+    std::deque<int> largers;
+    for(size_t i = 0; i < pairs.size(); ++i){
+        largers.push_back(pairs[i].first);
+    }
+    FordJohnsonSortDeque(largers);
+    //Reconstruct sorted pairs according to sorted larger elements
+    std::deque<std::pair<int, int> > sortedPairs;
+    std::deque<bool> used(pairs.size(), false);
+    for (size_t i = 0; i < largers.size(); ++i) {
+        for (size_t j = 0; j < pairs.size(); ++j) {
+            if (!used[j] && pairs[j].first == largers[i]) {
+                sortedPairs.push_back(pairs[j]);
+                used[j] = true;
+                break;
+            }
+        }
+    }
+    //Build main chain with larger elements
+    std::deque<int> mainChain;
+    for(size_t i = 0; i < sortedPairs.size(); ++i)
+        mainChain.push_back(sortedPairs[i].first);
+    //Insert smaller elements using Jacobsthal order
+    size_t m = sortedPairs.size();
+    std::vector<size_t> insertionOrder = buildJacobsthalInsertionOrder(m);
+    for (size_t idx = 0; idx < insertionOrder.size(); ++idx) {
+        size_t pairIndex = insertionOrder[idx];
+        int smallValue = sortedPairs[pairIndex].second;
+        int pos = binarySearchDequeV2(mainChain, smallValue, 0, static_cast<int>(mainChain.size()) - 1);
+        mainChain.insert(mainChain.begin() + pos, smallValue);
+    }
+    // Insert odd element if exists
+    if (hasOdd) {
+        int pos = binarySearchDequeV2(mainChain, oddElement, 0, static_cast<int>(mainChain.size()) - 1);
         mainChain.insert(mainChain.begin() + pos, oddElement);
     }
     arr = mainChain;
