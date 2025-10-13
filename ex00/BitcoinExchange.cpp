@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 00:17:01 by luifer            #+#    #+#             */
-/*   Updated: 2025/08/22 16:37:06 by lperez-h         ###   ########.fr       */
+/*   Updated: 2025/10/13 06:48:36 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool BitcoinExchange::isValidRate(const std::string& rate) const {
 	if (rate.empty() || rate == "0") {
 		return false;
 	}
-	float value = std::strtof(rate.c_str(); nullptr);
+	float value = std::strtof(rate.c_str(), NULL);
 	if(value < 0 || value > 1000) {
 		return false; // Rate must be between 0 and 1000
 	}
